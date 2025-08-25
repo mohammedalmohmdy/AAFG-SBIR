@@ -1,0 +1,5 @@
+dataset,method,seed,mAP,P@100,P@200,notes
+sketchy,baseline_triplet,0,58.123,68.300,73.200,"ResNet50+Triplet"
+sketchy,sa_only,0,65.280,74.750,79.400,"Self-Attn only"
+sketchy,ca_only,0,69.900,78.520,82.500,"Cross-Attn only"
+sketchy,ours_sa_ca,0,74.470,82.820,86.020,"Self+Cross"
