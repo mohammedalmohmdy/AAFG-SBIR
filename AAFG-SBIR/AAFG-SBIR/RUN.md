@@ -1,0 +1,144 @@
+# AAFG-SBIR — Reproducibility Guide (Tables 2–7)
+
+This document reproduces **all numbers** in Tables 2–7 from commit `<FILL_COMMIT_HASH>`.
+It produces per-seed CSVs and a single aggregated report (**mean ± std, 95% CI**) for each dataset/config.
+
+---
+
+## 1) Environment
+
+- OS: Ubuntu 20.04/22.04
+- Python: 3.10+
+- CUDA: 11.8/12.x
+- PyTorch: 2.2–2.4
+
+Install:
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+Determinism (enforced inside code):
+```python
+torch.manual_seed(SEED); np.random.seed(SEED); random.seed(SEED)
+torch.backends.cudnn.benchmark = False
+torch.use_deterministic_algorithms(True)
+```
+
+---
+
+## 2) Data layout
+
+```
+data/
+  sketchy/{images, sketches, splits/{train.txt,val.txt,test.txt}}
+  tu_berlin/{images, sketches, splits/{train.txt,val.txt,test.txt}}
+  qmul_shoe_v2/{images, sketches, pairs/{train_pairs.csv,test_pairs.csv}}
+  qmul_chair/{images, sketches, pairs/{train_pairs.csv,test_pairs.csv}}
+```
+
+- Normalize with ImageNet mean/std; resize to 256, crop 224.
+- Do **not** alter sketch polarity; keep RGB 3-channel.
+
+---
+
+## 3) Configs used in the paper
+
+```
+configs/
+  sketchy.yaml
+  tu_berlin.yaml
+  qmul_shoe_v2.yaml
+  qmul_chair.yaml
+```
+
+Each config defines: backbone=ResNet50 (shared), embed_dim=512, triplet margin=0.2, PK-sampler, SA/CA toggles.
+
+---
+
+## 4) One-shot commands per dataset
+
+> Run for **seeds 0, 1, 2**. Each run writes a per-seed CSV to `outputs/results_csv/…`.
+
+### Sketchy (Table 2 + Table 4)
+```bash
+# baseline (Triplet only)
+bash scripts/train.sh configs/sketchy.yaml 0 baseline_triplet model.self_attention=false model.cross_attention=false
+bash scripts/eval.sh  configs/sketchy.yaml 0 baseline_triplet
+
+# + Self-Attention
+bash scripts/train.sh configs/sketchy.yaml 0 sa_only model.self_attention=true model.cross_attention=false
+bash scripts/eval.sh  configs/sketchy.yaml 0 sa_only
+
+# + Cross-Attention
+bash scripts/train.sh configs/sketchy.yaml 0 ca_only model.self_attention=false model.cross_attention=true
+bash scripts/eval.sh  configs/sketchy.yaml 0 ca_only
+
+# Ours (SA+CA)
+bash scripts/train.sh configs/sketchy.yaml 0 ours_sa_ca model.self_attention=true model.cross_attention=true
+bash scripts/eval.sh  configs/sketchy.yaml 0 ours_sa_ca
+```
+
+Repeat with seeds `1` and `2`.
+Aggregate across seeds:
+```bash
+python scripts/aggregate_results.py --glob "outputs/results_csv/sketchy_*_seed*.csv"   --out outputs/results_csv/sketchy_agg.json
+```
+
+### TU-Berlin (Table 3)
+```bash
+bash scripts/train.sh configs/tu_berlin.yaml 0 ours_sa_ca model.self_attention=true model.cross_attention=true
+bash scripts/eval.sh  configs/tu_berlin.yaml 0 ours_sa_ca
+# repeat for seeds 1,2 then aggregate:
+python scripts/aggregate_results.py --glob "outputs/results_csv/tu_berlin_*_seed*.csv"   --out outputs/results_csv/tu_berlin_agg.json
+```
+
+### QMUL-Shoe-V2 (Tables 5 & 6) and QMUL-Chair (Table 7)
+```bash
+# Shoe-V2 ablations and ours
+bash scripts/train.sh configs/qmul_shoe_v2.yaml 0 baseline_triplet model.self_attention=false model.cross_attention=false
+bash scripts/eval.sh  configs/qmul_shoe_v2.yaml 0 baseline_triplet
+bash scripts/train.sh configs/qmul_shoe_v2.yaml 0 sa_only model.self_attention=true model.cross_attention=false
+bash scripts/eval.sh  configs/qmul_shoe_v2.yaml 0 sa_only
+bash scripts/train.sh configs/qmul_shoe_v2.yaml 0 ca_only model.self_attention=false model.cross_attention=true
+bash scripts/eval.sh  configs/qmul_shoe_v2.yaml 0 ca_only
+bash scripts/train.sh configs/qmul_shoe_v2.yaml 0 ours_sa_ca model.self_attention=true model.cross_attention=true
+bash scripts/eval.sh  configs/qmul_shoe_v2.yaml 0 ours_sa_ca
+python scripts/aggregate_results.py --glob "outputs/results_csv/qmul_shoe_v2_*_seed*.csv"   --out outputs/results_csv/qmul_shoe_v2_agg.json
+
+# Chair
+bash scripts/train.sh configs/qmul_chair.yaml 0 ours_sa_ca model.self_attention=true model.cross_attention=true
+bash scripts/eval.sh  configs/qmul_chair.yaml 0 ours_sa_ca
+python scripts/aggregate_results.py --glob "outputs/results_csv/qmul_chair_*_seed*.csv"   --out outputs/results_csv/qmul_chair_agg.json
+```
+
+> Baselines like HOG, SketchyNet, SEM-PCYC, etc. can be listed as “as-reported” with citations if not re-implemented. Keep them in `tables/baselines_*.csv`.
+
+---
+
+## 5) Figures
+
+Generate figures (loss/val mAP, PR, CMC, t-SNE, attention maps):
+```bash
+python scripts/make_figures.py --dataset sketchy
+python scripts/make_figures.py --dataset tu_berlin
+python scripts/make_figures.py --dataset qmul_shoe_v2
+python scripts/make_figures.py --dataset qmul_chair
+```
+Outputs land in `outputs/figures/<dataset>/`.
+
+---
+
+## 6) Provenance
+
+After successful runs:
+- Record GPU model, driver, CUDA, PyTorch in `PROVENANCE.md`.
+- Record exact commit hash: `git rev-parse --short HEAD`.
+- Attach `outputs/results_csv/*_agg.json` and `logs/*.txt`.
+
+**All paper numbers are generated by:**
+```bash
+bash scripts/reproduce.sh
+```
+which calls the commands above for seeds `{0,1,2}` and checks that CSV totals **match the tables verbatim**.

@@ -1,0 +1,34 @@
+dataset:
+  name: tu_berlin
+  root: data/tu_berlin
+  split_dir: data/tu_berlin/splits
+  input_size: 224
+  normalize: imagenet
+  sampler: PK
+  P: 16
+  K: 4
+
+model:
+  backbone: resnet50
+  embed_dim: 512
+  self_attention: true
+  cross_attention: true
+
+train:
+  epochs: 100
+  batch_size: 64
+  optimizer: adam
+  lr: 3.0e-4
+  weight_decay: 1.0e-4
+  cosine_decay: true
+  fp16: false
+
+loss:
+  type: triplet
+  margin: 0.2
+
+eval:
+  metric: cosine
+  compute_map: true
+  p_at_k: [100]
+  save_csv: true
