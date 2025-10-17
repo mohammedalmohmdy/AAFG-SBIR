@@ -16,50 +16,6 @@ Key Features:
 - Explainability — Generates interpretable attention heatmaps and attention intensity distributions.
 - Cross-Dataset Generalization — Validated on four major FG-SBIR benchmarks (Sketchy, TU-Berlin, QMUL-Shoe-V2, QMUL-Chair).
 
-Structure:
-
-AAFG-SBIR/
-├─ README.md
-├─ LICENSE
-├─ CITATION.cff
-├─ requirements.txt
-├─ .gitignore
-├─ configs/
-│  └─ default.yaml
-├─ src/
-│  ├─ datasets/
-│  │  ├─ sketchy.py
-│  │  ├─ tuberlin.py
-│  │  ├─ qmul_shoe_v2.py
-│  │  └─ qmul_chair.py
-│  ├─ models/
-│  │  ├─ backbone_resnet50.py
-│  │  ├─ attention_sa.py          # self-attention
-│  │  ├─ attention_ca.py          # cross-attention
-│  │  └─ aafg_sbir.py             # build_model()
-│  ├─ losses/
-│  │  └─ triplet.py               # margin=0.2
-│  ├─ utils/
-│  │  ├─ seed.py
-│  │  ├─ metrics.py               # mAP, P@100
-│  │  ├─ preprocess.py
-│  │  └─ train_utils.py
-│  ├─ train.py                    # main training entry
-│  └─ test.py                     # main evaluation entry
-├─ scripts/
-│  ├─ train.sh
-│  ├─ eval.sh
-│  ├─ demo_infer.py               # single sketch → top-K results
-│  └─ compute_flops.py            # optional
-├─ figures/
-│  ├─ perf_vs_flops.png
-│  └─ attention_examples/
-└─ results/                        # (ignored by git)
-   ├─ checkpoints/
-   └─ eval/
-
-
-   
 
 Installation:
 git clone https://github.com/mohammedalmohmdy/AAFG-SBIR.git
@@ -101,7 +57,9 @@ Citation:
 If you use this code, please cite:
 
   title   = {Bridging the Sketch–Photo Domain Gap: An Attention-Augmented Framework for Fine-Grained Image Retrieval},
+  
   author  = {Mohammed A. S. Al-Mohamadi and Prabhakar C. J.},
+  
   journal = {The Visual Computer},
   year    = {2025}
 }
