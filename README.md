@@ -14,7 +14,7 @@ pip install -r requirements.txt
 
 
 
-### 📂 Datasets
+## 📂 Datasets
 
 - **ShoeV2 / ChairV2**  
   [Sketchy Official Website](https://sketchx.eecs.qmul.ac.uk/downloads/)  
@@ -29,14 +29,14 @@ pip install -r requirements.txt
   [Google Drive Download](https://drive.google.com/file/d/12VV40j5Nf4hNBfFy0AhYEtql1OjwXAUC/view)
 
 
-Training
+##  Training
 python src/train.py --config configs/default.yaml
 
 
-Demo Inference
+##  Demo Inference
 python scripts/demo_infer.py --sketch path/to/sketch.png --gallery path/to/gallery_dir
 
-requirements.txt
+##  requirements.txt
 torch==2.2.1
 torchvision==0.17.1
 numpy
@@ -48,3 +48,12 @@ pillow
 matplotlib
 scikit-learn
 
+##  cff-version: 1.2.0
+title: "AAFG-SBIR: Attention-Augmented Fine-Grained Sketch-Based Image Retrieval"
+authors:
+  - family-names: "Al-Mohamadi"
+    given-names: "Mohammed A.S."
+  - family-names: "C. J"
+    given-names: ".Prabhakar "
+repository-code: "https://github.com/mohammedalmohmdy/AAFG-SBIR"
+message: "If you use this code, please cite the associated manuscript submitted to The Visual Computer (Springer)."
