@@ -11,10 +11,10 @@ AAFG-SBIR is an attention-augmented deep learning framework for Fine-Grained Ske
 It integrates self-attention and cross-attention modules to enhance feature alignment between sketches and photos while maintaining interpretability and computational efficiency.
 
 Key Features:
-- Dual Attention Design — Combines self-attention and cross-attention for better sketch–photo correspondence.
-- Lightweight Efficiency — Adds only ~8% computational overhead compared to ResNet-50 baseline.
+- Dual Attention Design  Combines self-attention and cross-attention for better sketch–photo correspondence.
+- Lightweight Efficiency  Adds only ~8% computational overhead compared to ResNet-50 baseline.
 - Explainability — Generates interpretable attention heatmaps and attention intensity distributions.
-- Cross-Dataset Generalization — Validated on four major FG-SBIR benchmarks (Sketchy, TU-Berlin, QMUL-Shoe-V2, QMUL-Chair).
+- Cross-Dataset Generalization  Validated on four major FG-SBIR benchmarks (Sketchy, TU-Berlin, QMUL-Shoe-V2, QMUL-Chair).
 
 
 Installation:
