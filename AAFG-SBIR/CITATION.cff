@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+title: "AAFG-SBIR: Attention-Augmented Fine-Grained Sketch-Based Image Retrieval"
+authors:
+  - family-names: "Al-Mohamadi"
+    given-names: "Mohammed A.S."
+  - family-names: "C. J"
+    given-names: ".Prabhakar "
+repository-code: "https://github.com/mohammedalmohmdy/AAFG-SBIR"
+message: "If you use this code, please cite the associated manuscript submitted to The Visual Computer (Springer)."
